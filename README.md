@@ -88,7 +88,6 @@ NGINX_PORT=18080
 - Fetch and store currency data from FreeCurrencyAPI
 - Store currency details including code, name, symbol, and type
 - Filter currencies by specific codes (EUR, USD, etc.)
-- Track which currencies are new vs. updated in the database
 
 ### Usage
 ```bash
@@ -102,6 +101,6 @@ make fetch-currencies EUR USD JPY
 ### Configuration
 - API key is configured in the Docker environment
 - Data is stored in the `currency_data` table
-- Each currency includes: code, name, symbol, symbol_native, decimal_digits, rounding, name_plural, and type
+- Each currency includes: code, name, symbol, symbol_native, decimal_digits, rounding, name_plural and type
 
 ---
