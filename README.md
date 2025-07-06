@@ -30,7 +30,7 @@ NGINX_PORT=18080
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/currency-conv.git
+   git clone https://github.com/OgyNani/currency-conv.git
    cd currency-conv
    ```
 
