@@ -1,0 +1,6 @@
+vendor
+node_modules
+db_data
+.env.local
+.env.test.local
+.env.prod.local
