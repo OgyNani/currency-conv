@@ -54,17 +54,7 @@ NGINX_PORT=18080
    make fetch-currencies
    ```
 
-6. **Access the services:**
-   - Web API: [http://localhost:18080](http://localhost:18080)
-   - PostgreSQL: `localhost:5432` (user/pass/db: symfony)
-   - Redis: `localhost:6379`
-
-## Scaling
-- Run as many app containers as needed (on any host), all pointing to the same DB/Redis.
-- DB and Redis are singletons, shared by all app instances.
-
 ---
-For questions or improvements, open an issue or contact the maintainer.
 
 ## Makefile Commands
 
