@@ -28,21 +28,34 @@ NGINX_PORT=18080
 
 ## Quick Start (Local Dev)
 
-1. **Spin up DB/Redis for local dev:**
+1. **Clone the repository:**
    ```sh
-   docker-compose -f docker-compose.db-redis.yml up -d
+   git clone https://github.com/yourusername/currency-conv.git
+   cd currency-conv
    ```
-2. **Edit `.env` to use `localhost` for DB/Redis.**
-3. **Start the app stack:**
+
+2. **Start the Docker containers:**
    ```sh
    make run
    ```
-4. **Install Composer dependencies (if needed):**
+
+3. **Install dependencies (if needed):**
    ```sh
    make install
    ```
-5. **Access the API:**
-   - Symfony: [http://localhost:18080](http://localhost:18080)
+
+4. **Run database migrations:**
+   ```sh
+   make migrate
+   ```
+
+5. **Fetch currency data:**
+   ```sh
+   make fetch-currencies
+   ```
+
+6. **Access the services:**
+   - Web API: [http://localhost:18080](http://localhost:18080)
    - PostgreSQL: `localhost:5432` (user/pass/db: symfony)
    - Redis: `localhost:6379`
 
@@ -63,7 +76,8 @@ For questions or improvements, open an issue or contact the maintainer.
 - `make bash`     — Open a bash shell in the app container
 - `make psql`     — Open a psql shell in the db container (user/db: symfony)
 - `make redis-cli` — Open a Redis CLI shell in the redis container
-- `make fetch-currencies` — Fetch currencies from the API
+- `make fetch-currencies` — Fetch all currencies from the API
+- `make fetch-currencies EUR USD JPY` — Fetch only specific currencies
 
 ## Redis Service
 - **Host:** `localhost`
@@ -78,6 +92,26 @@ For questions or improvements, open an issue or contact the maintainer.
 - **Password:** `symfony`
 - **Database:** `symfony`
 
----
+## Currency API Integration
 
-For questions or improvements, open an issue or contact the maintainer.
+### Features
+- Fetch and store currency data from FreeCurrencyAPI
+- Store currency details including code, name, symbol, and type
+- Filter currencies by specific codes (EUR, USD, etc.)
+- Track which currencies are new vs. updated in the database
+
+### Usage
+```bash
+# Fetch all available currencies
+make fetch-currencies
+
+# Fetch only specific currencies
+make fetch-currencies EUR USD JPY
+```
+
+### Configuration
+- API key is configured in the Docker environment
+- Data is stored in the `currency_data` table
+- Each currency includes: code, name, symbol, symbol_native, decimal_digits, rounding, name_plural, and type
+
+---
