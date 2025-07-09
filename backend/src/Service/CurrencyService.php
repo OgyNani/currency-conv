@@ -3,62 +3,27 @@
 namespace App\Service;
 
 use App\Entity\CurrencyData;
+use App\Http\CurrencyApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CurrencyService
 {
-    private string $apiKey;
-    private string $apiBaseUrl = 'https://api.freecurrencyapi.com/v1';
+    private CurrencyApiClient $apiClient;
 
     public function __construct(
         private EntityManagerInterface $entityManager,
         string $apiKey
     ) {
-        $this->apiKey = $apiKey;
+        $this->apiClient = new CurrencyApiClient($apiKey);
     }
 
     public function fetchCurrencies(array $currencyCodes = []): array
     {
-        $url = "{$this->apiBaseUrl}/currencies?apikey={$this->apiKey}";
-        
-        if (!empty($currencyCodes)) {
-            $currencyParam = implode('%2C', array_map('strtoupper', $currencyCodes));
-            $url .= "&currencies={$currencyParam}";
-        }
-        
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-        ]);
-        
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-        
-        if ($err) {
-            throw new \RuntimeException('cURL Error: ' . $err);
-        }
-        
-        if ($statusCode !== 200) {
-            throw new \RuntimeException('API Error: Received status code ' . $statusCode);
-        }
-        
-        $data = json_decode($response, true);
-        
-        if (!isset($data['data']) || !is_array($data['data'])) {
-            throw new \RuntimeException('Invalid response from currency API');
-        }
-
-        $stats = $this->saveCurrencies($data['data']);
+        $currenciesData = $this->apiClient->getCurrencies($currencyCodes);
+        $stats = $this->saveCurrencies($currenciesData);
         
         return [
-            'currencies' => $data['data'],
+            'currencies' => $currenciesData,
             'stats' => $stats
         ];
     }

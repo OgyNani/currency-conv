@@ -28,5 +28,20 @@ redis-cli:
 fetch-currencies:
 	docker-compose exec app php bin/console app:fetch-currencies $(filter-out $@,$(MAKECMDGOALS))
 
+# Usage: make create-pair EUR USD
+# This will create a currency pair from EUR to USD
+create-pair:
+	docker-compose exec app php bin/console app:create-pair $(word 2,$(MAKECMDGOALS)) $(word 3,$(MAKECMDGOALS))
+
+# Usage: make list-pairs
+# Optional: make list-pairs EUR (to filter by currency code)
+list-pairs:
+	docker-compose exec app php bin/console app:list-pairs $(if $(filter-out $@,$(MAKECMDGOALS)),--code=$(filter-out $@,$(MAKECMDGOALS)),)
+
+# Usage: make list-currencies
+# Optional: make list-currencies EUR (to filter by currency code)
+list-currencies:
+	docker-compose exec app php bin/console app:list-currencies $(if $(filter-out $@,$(MAKECMDGOALS)),--code=$(filter-out $@,$(MAKECMDGOALS)),)
+
 %:
 	@:

@@ -68,6 +68,11 @@ NGINX_PORT=18080
 - `make redis-cli` — Open a Redis CLI shell in the redis container
 - `make fetch-currencies` — Fetch all currencies from the API
 - `make fetch-currencies EUR USD JPY` — Fetch only specific currencies
+- `make create-pair EUR USD` — Create a currency pair from EUR to USD
+- `make list-pairs` — List all currency pairs
+- `make list-pairs EUR` — List currency pairs involving EUR
+- `make list-currencies` — List all available currencies
+- `make list-currencies EU` — List currencies with codes starting with EU
 
 ## Redis Service
 - **Host:** `localhost`
