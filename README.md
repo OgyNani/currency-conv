@@ -94,15 +94,6 @@ NGINX_PORT=18080
 - Store currency details including code, name, symbol, and type
 - Filter currencies by specific codes (EUR, USD, etc.)
 
-### Usage
-```bash
-# Fetch all available currencies
-make fetch-currencies
-
-# Fetch only specific currencies
-make fetch-currencies EUR USD JPY
-```
-
 ### Configuration
 - API key is configured in the Docker environment
 - Data is stored in the `currency_data` table
