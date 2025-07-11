@@ -48,33 +48,13 @@ class FetchCurrenciesCommand extends Command
 
         try {
             $result = $this->currencyService->fetchCurrencies($currencyCodes);
-            $currencies = $result['currencies'];
-            $stats = $result['stats'];
-            $count = count($currencies);
+            $displayData = $this->currencyService->prepareCurrencyDisplayData($result);
             
-            $io->success(sprintf(
-                "Successfully fetched %d currencies: %d new, %d updated",
-                $count,
-                $stats['added'],
-                $stats['updated']
-            ));
-            
-            $rows = [];
-
-            foreach ($currencies as $code => $data) {
-                $status = in_array($code, $stats['new_currencies']) ? 'NEW' : 'UPDATED';
-                $rows[] = [
-                    $code,
-                    $data['name'],
-                    $data['symbol'],
-                    $data['type'],
-                    $status
-                ];
-            }
+            $io->success($displayData['summary']);
             
             $io->table(
                 ['Code', 'Name', 'Symbol', 'Type', 'Status'],
-                $rows
+                $displayData['rows']
             );
             
             return Command::SUCCESS;

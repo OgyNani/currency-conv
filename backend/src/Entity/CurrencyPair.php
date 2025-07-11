@@ -21,6 +21,9 @@ class CurrencyPair
     #[ORM\JoinColumn(name: 'currency_to', referencedColumnName: 'id', nullable: false)]
     private CurrencyData $currencyTo;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $observe = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,17 @@ class CurrencyPair
     public function setCurrencyTo(CurrencyData $currencyTo): self
     {
         $this->currencyTo = $currencyTo;
+        return $this;
+    }
+
+    public function isObserve(): bool
+    {
+        return $this->observe;
+    }
+
+    public function setObserve(bool $observe): self
+    {
+        $this->observe = $observe;
         return $this;
     }
 }

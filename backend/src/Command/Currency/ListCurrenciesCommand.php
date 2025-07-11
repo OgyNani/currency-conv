@@ -2,8 +2,7 @@
 
 namespace App\Command\Currency;
 
-use App\Entity\CurrencyData;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\CurrencyService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -19,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ListCurrenciesCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private CurrencyService $currencyService
     ) {
         parent::__construct();
     }
@@ -35,53 +34,22 @@ class ListCurrenciesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $filterCode = $input->getOption('code');
+        $result = $this->currencyService->listCurrencies($filterCode);
+        $displayData = $this->currencyService->prepareCurrencyListDisplayData($result);
         
-        $title = 'All currencies';
-        if ($filterCode) {
-            $filterCode = strtoupper($filterCode);
-            $title = "Currencies matching code: {$filterCode}";
-        }
+        $io->title($displayData['title']);
         
-        $io->title($title);
-
-        $repository = $this->entityManager->getRepository(CurrencyData::class);
-        
-        $qb = $repository->createQueryBuilder('c')
-            ->orderBy('c.code', 'ASC');
-            
-        if ($filterCode) {
-            $qb->andWhere('c.code LIKE :code')
-               ->setParameter('code', $filterCode . '%');
-        }
-        
-        $currencies = $qb->getQuery()->getResult();
-        
-        if (empty($currencies)) {
-            if ($filterCode) {
-                $io->warning("No currencies found matching code {$filterCode}");
-            } else {
-                $io->warning('No currencies found in the database');
-            }
-            
+        if ($displayData['isEmpty']) {
+            $io->warning($displayData['summary']);
             return Command::SUCCESS;
         }
         
         $table = new Table($output);
         $table->setHeaders(['Code', 'Name', 'Symbol', 'Native Symbol', 'Decimals']);
-        
-        foreach ($currencies as $currency) {
-            $table->addRow([
-                $currency->getCode(),
-                $currency->getName(),
-                $currency->getSymbol(),
-                $currency->getSymbolNative(),
-                $currency->getDecimalDigits(),
-            ]);
-        }
-        
+        $table->setRows($displayData['rows']);
         $table->render();
         
-        $io->success(sprintf('Found %d currency/currencies', count($currencies)));
+        $io->success($displayData['summary']);
         
         return Command::SUCCESS;
     }

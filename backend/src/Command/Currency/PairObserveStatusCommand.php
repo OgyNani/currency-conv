@@ -2,10 +2,7 @@
 
 namespace App\Command\Currency;
 
-use App\Entity\CurrencyData;
-use App\Entity\CurrencyPair;
 use App\Service\CurrencyPairService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,13 +11,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:create-pair',
-    description: 'Create a currency pair',
+    name: 'app:pair-observe-status',
+    description: 'Change the observe status of a currency pair',
 )]
-class CreateCurrencyPairCommand extends Command
+class PairObserveStatusCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
         private CurrencyPairService $currencyPairService
     ) {
         parent::__construct();
@@ -29,20 +25,24 @@ class CreateCurrencyPairCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('from', InputArgument::REQUIRED, 'Currency code to convert from (e.g. EUR)')
-            ->addArgument('to', InputArgument::REQUIRED, 'Currency code to convert to (e.g. USD)')
+            ->addArgument('id', InputArgument::REQUIRED, 'ID of the currency pair')
+            ->addArgument('status', InputArgument::REQUIRED, 'New observe status (true or false)')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $fromCode = strtoupper($input->getArgument('from'));
-        $toCode = strtoupper($input->getArgument('to'));
-
-        $io->title("Creating currency pair: {$fromCode} → {$toCode}");
-
-        $result = $this->currencyPairService->createPairWithValidation($fromCode, $toCode);
+        $id = (int)$input->getArgument('id');
+        $statusArg = $input->getArgument('status');
+        $parseResult = $this->currencyPairService->parseStatusArgument($statusArg);
+        
+        if (!$parseResult['success']) {
+            $io->error($parseResult['message']);
+            return Command::FAILURE;
+        }
+        
+        $result = $this->currencyPairService->changeObserveStatus($id, $parseResult['status']);
         
         if (!$result['success']) {
             $io->error($result['message']);
@@ -50,6 +50,7 @@ class CreateCurrencyPairCommand extends Command
         }
         
         $io->success($result['message']);
+        
         return Command::SUCCESS;
     }
 }
