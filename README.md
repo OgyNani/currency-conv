@@ -58,21 +58,38 @@ NGINX_PORT=18080
 
 ## Makefile Commands
 
+### Container Management
 - `make run`      — Build and start all containers in the background
 - `make stop`     — Stop and remove all containers
 - `make logs`     — Tail logs from all containers
 - `make install`  — Install Composer dependencies inside the app container
 - `make migrate`  — Run Symfony Doctrine migrations
+
+### Shell Access
 - `make bash`     — Open a bash shell in the app container
 - `make psql`     — Open a psql shell in the db container (user/db: symfony)
 - `make redis-cli` — Open a Redis CLI shell in the redis container
+
+### Currency Management
 - `make fetch-currencies` — Fetch all currencies from the API
 - `make fetch-currencies EUR USD JPY` — Fetch only specific currencies
+- `make list-currencies` — List all available currencies
+- `make list-currencies EU` — List currencies with codes starting with EU
+
+### Currency Pair Management
 - `make create-pair EUR USD` — Create a currency pair from EUR to USD
 - `make list-pairs` — List all currency pairs
 - `make list-pairs EUR` — List currency pairs involving EUR
-- `make list-currencies` — List all available currencies
-- `make list-currencies EU` — List currencies with codes starting with EU
+- `make pair-observe-status 1 true` — Change observe status of pair with ID 1 to true
+- `make pair-observe-status 1 false` — Change observe status of pair with ID 1 to false
+
+### Exchange Rate Management
+- `make fetch-exchange-rate 1` — Fetch and store current exchange rate for pair with ID 1
+- `make get-pair-rate 1` — Get latest exchange rate for currency pair with ID 1
+- `make get-pair-rate 1 all` — Get all historical rates for currency pair with ID 1
+- `make get-pair-rate 1 "2025-07-10"` — Get rate for specific date
+- `make get-pair-rate 1 "2025-07-01" "2025-07-10"` — Get rates between two dates
+- `make get-pair-rate 1 2025-07-01_10:00 2025-07-10_15:30` — Get rates between two timestamps (use underscore for spaces)
 
 ## Redis Service
 - **Host:** `localhost`
