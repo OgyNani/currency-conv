@@ -87,8 +87,8 @@ NGINX_PORT=18080
 - `make fetch-exchange-rate 1` — Fetch and store current exchange rate for pair with ID 1
 - `make get-pair-rate 1` — Get latest exchange rate for currency pair with ID 1
 - `make get-pair-rate 1 all` — Get all historical rates for currency pair with ID 1
-- `make get-pair-rate 1 "2025-07-10"` — Get rate for specific date
-- `make get-pair-rate 1 "2025-07-01" "2025-07-10"` — Get rates between two dates
+- `make get-pair-rate 1 2025-07-10` — Get rate for specific date
+- `make get-pair-rate 1 2025-07-01 2025-07-10` — Get rates between two dates
 - `make get-pair-rate 1 2025-07-01_10:00 2025-07-10_15:30` — Get rates between two timestamps (use underscore for spaces)
 
 ## Redis Service
