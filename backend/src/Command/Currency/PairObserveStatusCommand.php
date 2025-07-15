@@ -2,7 +2,7 @@
 
 namespace App\Command\Currency;
 
-use App\Service\CurrencyPairService;
+use App\Service\Command\PairObserveStatusService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PairObserveStatusCommand extends Command
 {
     public function __construct(
-        private CurrencyPairService $currencyPairService
+        private PairObserveStatusService $pairObserveStatusService
     ) {
         parent::__construct();
     }
@@ -35,14 +35,14 @@ class PairObserveStatusCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $id = (int)$input->getArgument('id');
         $statusArg = $input->getArgument('status');
-        $parseResult = $this->currencyPairService->parseStatusArgument($statusArg);
+        $parseResult = $this->pairObserveStatusService->parseStatusArgument($statusArg);
         
         if (!$parseResult['success']) {
             $io->error($parseResult['message']);
             return Command::FAILURE;
         }
         
-        $result = $this->currencyPairService->changeObserveStatus($id, $parseResult['status']);
+        $result = $this->pairObserveStatusService->execute($id, $parseResult['status']);
         
         if (!$result['success']) {
             $io->error($result['message']);

@@ -23,6 +23,20 @@ class CurrencyPair
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $observe = false;
+    
+    /**
+     * Create a new currency pair
+     *
+     * @param CurrencyData $currencyFrom The source currency
+     * @param CurrencyData $currencyTo The target currency
+     * @param bool $observe Whether to observe this pair for rate updates
+     */
+    public function __construct(CurrencyData $currencyFrom, CurrencyData $currencyTo, bool $observe = false)
+    {
+        $this->currencyFrom = $currencyFrom;
+        $this->currencyTo = $currencyTo;
+        $this->observe = $observe;
+    }
 
     public function getId(): ?int
     {

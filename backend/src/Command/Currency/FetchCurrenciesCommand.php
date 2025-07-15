@@ -2,7 +2,7 @@
 
 namespace App\Command\Currency;
 
-use App\Service\CurrencyService;
+use App\Service\Command\FetchCurrenciesService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class FetchCurrenciesCommand extends Command
 {
     public function __construct(
-        private CurrencyService $currencyService
+        private FetchCurrenciesService $fetchCurrenciesService
     ) {
         parent::__construct();
     }
@@ -47,8 +47,8 @@ class FetchCurrenciesCommand extends Command
         }
 
         try {
-            $result = $this->currencyService->fetchCurrencies($currencyCodes);
-            $displayData = $this->currencyService->prepareCurrencyDisplayData($result);
+            $result = $this->fetchCurrenciesService->execute($currencyCodes);
+            $displayData = $this->fetchCurrenciesService->prepareDisplayData($result);
             
             $io->success($displayData['summary']);
             

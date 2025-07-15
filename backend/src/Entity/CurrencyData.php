@@ -36,6 +36,38 @@ class CurrencyData
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $type = null;
+    
+    /**
+     * Create a new currency data entity
+     *
+     * @param string $code The currency code (e.g., USD)
+     * @param string $symbol The currency symbol (e.g., $)
+     * @param string $name The currency name (e.g., US Dollar)
+     * @param string $symbolNative The native currency symbol
+     * @param int $decimalDigits The number of decimal digits
+     * @param float $rounding The rounding value
+     * @param string $namePlural The plural name of the currency
+     * @param string|null $type The currency type (e.g., fiat)
+     */
+    public function __construct(
+        string $code,
+        string $symbol,
+        string $name,
+        string $symbolNative,
+        int $decimalDigits,
+        float $rounding,
+        string $namePlural,
+        ?string $type = null
+    ) {
+        $this->code = $code;
+        $this->symbol = $symbol;
+        $this->name = $name;
+        $this->symbolNative = $symbolNative;
+        $this->decimalDigits = $decimalDigits;
+        $this->rounding = $rounding;
+        $this->namePlural = $namePlural;
+        $this->type = $type;
+    }
 
     public function getId(): ?int { 
         return $this->id; 

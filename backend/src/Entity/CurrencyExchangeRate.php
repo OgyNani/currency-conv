@@ -18,15 +18,24 @@ class CurrencyExchangeRate
     #[ORM\JoinColumn(name: 'pair_id', referencedColumnName: 'id', nullable: false)]
     private CurrencyPair $pair;
 
-    #[ORM\Column(type: 'json')]
-    private array $exchangeRate = [];
+    #[ORM\Column(type: 'decimal', precision: 20, scale: 10)]
+    private float $rate;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $date;
 
-    public function __construct()
+    /**
+     * Create a new currency exchange rate
+     *
+     * @param CurrencyPair $pair The currency pair
+     * @param float $rate The exchange rate value
+     * @param \DateTimeInterface|null $date The date of the exchange rate, defaults to now
+     */
+    public function __construct(CurrencyPair $pair, float $rate, \DateTimeInterface $date = null)
     {
-        $this->date = new \DateTime();
+        $this->pair = $pair;
+        $this->rate = $rate;
+        $this->date = $date ?? new \DateTime();
     }
 
     public function getId(): ?int
@@ -45,14 +54,14 @@ class CurrencyExchangeRate
         return $this;
     }
 
-    public function getExchangeRate(): array
+    public function getRate(): float
     {
-        return $this->exchangeRate;
+        return $this->rate;
     }
 
-    public function setExchangeRate(array $exchangeRate): self
+    public function setRate(float $rate): self
     {
-        $this->exchangeRate = $exchangeRate;
+        $this->rate = $rate;
         return $this;
     }
 

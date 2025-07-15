@@ -4,7 +4,7 @@ namespace App\Command\Currency;
 
 use App\Entity\CurrencyData;
 use App\Entity\CurrencyPair;
-use App\Service\CurrencyPairService;
+use App\Service\Command\CreateCurrencyPairService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,7 +21,7 @@ class CreateCurrencyPairCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private CurrencyPairService $currencyPairService
+        private CreateCurrencyPairService $createCurrencyPairService
     ) {
         parent::__construct();
     }
@@ -42,7 +42,7 @@ class CreateCurrencyPairCommand extends Command
 
         $io->title("Creating currency pair: {$fromCode} → {$toCode}");
 
-        $result = $this->currencyPairService->createPairWithValidation($fromCode, $toCode);
+        $result = $this->createCurrencyPairService->execute($fromCode, $toCode);
         
         if (!$result['success']) {
             $io->error($result['message']);

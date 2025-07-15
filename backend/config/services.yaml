@@ -18,6 +18,16 @@ services:
         resource: '../src/'
 
     # add more service definitions when explicit configuration is needed
-    App\Service\CurrencyService:
+    # API Client configuration
+    App\Http\CurrencyApiClient:
+        arguments:
+            $apiKey: '%app.currency_api_key%'
+            
+    # Service configurations
+    App\Service\Command\FetchCurrenciesService:
+        arguments:
+            $apiKey: '%app.currency_api_key%'
+            
+    App\Service\Command\FetchExchangeRateService:
         arguments:
             $apiKey: '%app.currency_api_key%'

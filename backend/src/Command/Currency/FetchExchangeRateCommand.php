@@ -3,7 +3,7 @@
 namespace App\Command\Currency;
 
 use App\Entity\CurrencyPair;
-use App\Service\ExchangeRateService;
+use App\Service\Command\FetchExchangeRateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -20,7 +20,7 @@ class FetchExchangeRateCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ExchangeRateService $exchangeRateService
+        private FetchExchangeRateService $fetchExchangeRateService
     ) {
         parent::__construct();
     }
@@ -45,7 +45,7 @@ class FetchExchangeRateCommand extends Command
         }
         
         try {
-            $result = $this->exchangeRateService->fetchAndStoreExchangeRate($currencyPair);
+            $result = $this->fetchExchangeRateService->execute($currencyPair);
             
             $io->title($result['title']);
             $io->success($result['message']);

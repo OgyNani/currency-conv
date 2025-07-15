@@ -53,10 +53,10 @@ pair-observe-status:
 fetch-exchange-rate:
 	docker-compose exec app php bin/console app:fetch-exchange-rate $(word 2,$(MAKECMDGOALS))
 
-# Usage: make get-pair-rate 1
+# Usage: make get-pair-rate 1 (returns latest)
 # Optional: make get-pair-rate 1 all (get all rates for this pair)
-# Optional: make get-pair-rate 1 "2025-07-10"
-# Optional: make get-pair-rate 1 "2025-07-01" "2025-07-10"
+# Optional: make get-pair-rate 1 2025-07-10
+# Optional: make get-pair-rate 1 2025-07-01 2025-07-10
 # For timestamps, use underscore instead of space:
 # Optional: make get-pair-rate 1 2025-07-01_10:00 2025-07-10_15:30
 # Optional: make get-pair-rate 1 2025-07-01_10:00:00 2025-07-10_15:30:00

@@ -4,7 +4,7 @@ namespace App\Command\Currency;
 
 use App\Entity\CurrencyPair;
 use App\Entity\CurrencyExchangeRate;
-use App\Service\ExchangeRateService;
+use App\Service\Command\GetPairRateService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +22,7 @@ class GetPairRateCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ExchangeRateService $exchangeRateService
+        private GetPairRateService $getPairRateService
     ) {
         parent::__construct();
     }
@@ -54,9 +54,9 @@ class GetPairRateCommand extends Command
         $toCode = $currencyPair->getCurrencyTo()->getCode();
         
         try {
-            $result = $this->exchangeRateService->getRatesWithContext($currencyPair, $dateStr, $toDateStr);
+            $result = $this->getPairRateService->execute($currencyPair, $dateStr, $toDateStr);
             
-            $displayData = $this->exchangeRateService->prepareExchangeRateDisplayData($result);
+            $displayData = $this->getPairRateService->prepareDisplayData($result);
             
             if ($displayData['count'] === 0) {
                 $io->warning($displayData['summary']);

@@ -2,7 +2,7 @@
 
 namespace App\Command\Currency;
 
-use App\Service\CurrencyService;
+use App\Service\Command\ListCurrenciesService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ListCurrenciesCommand extends Command
 {
     public function __construct(
-        private CurrencyService $currencyService
+        private ListCurrenciesService $listCurrenciesService
     ) {
         parent::__construct();
     }
@@ -34,8 +34,8 @@ class ListCurrenciesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $filterCode = $input->getOption('code');
-        $result = $this->currencyService->listCurrencies($filterCode);
-        $displayData = $this->currencyService->prepareCurrencyListDisplayData($result);
+        $result = $this->listCurrenciesService->execute($filterCode);
+        $displayData = $this->listCurrenciesService->prepareDisplayData($result);
         
         $io->title($displayData['title']);
         
