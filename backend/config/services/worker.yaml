@@ -1,0 +1,22 @@
+services:
+    App\Command\Worker\WorkerCommand:
+        autowire: true
+        autoconfigure: true
+        tags: ['console.command']
+
+    App\Service\Worker\WorkerInterface:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Service\Worker\AbstractWorkerService:
+        abstract: true
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Service\Worker\ExchangeRateWorker:
+        autowire: true
+        autoconfigure: true
+        public: true
+        tags: ['app.worker']

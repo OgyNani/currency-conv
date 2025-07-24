@@ -6,6 +6,10 @@
 parameters:
     app.currency_api_key: '%env(CURRENCY_API_KEY)%'
 
+# Import additional service configurations
+imports:
+    - { resource: services/worker.yaml }
+
 services:
     # default configuration for services in *this* file
     _defaults:

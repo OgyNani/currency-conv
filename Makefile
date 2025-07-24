@@ -22,6 +22,23 @@ psql:
 redis-cli:
 	docker-compose exec redis redis-cli
 
+# Testing commands
+# Test only command classes
+test-commands:
+	cd backend && ./vendor/bin/phpunit --testsuite=Unit --filter="Command"
+
+# Test only command classes in Docker
+test-commands-docker:
+	docker-compose exec app php bin/phpunit --testsuite=Unit --filter="Command"
+
+# Test API integration
+test-api:
+	cd backend && ./vendor/bin/phpunit --testsuite=Integration --filter="Api"
+
+# Test API integration in Docker
+test-api-docker:
+	docker-compose exec app php bin/phpunit --testsuite=Integration --filter="Api"
+
 # Usage: make fetch-currencies EUR USD JPY
 # This will fetch only the specified currencies
 # If no currencies specified, fetches all currencies
@@ -62,6 +79,16 @@ fetch-exchange-rate:
 # Optional: make get-pair-rate 1 2025-07-01_10:00:00 2025-07-10_15:30:00
 get-pair-rate:
 	docker-compose exec app php bin/console app:get-pair-rate $(word 2,$(MAKECMDGOALS)) $(if $(word 3,$(MAKECMDGOALS)),"$(word 3,$(MAKECMDGOALS))",) $(if $(word 4,$(MAKECMDGOALS)),"$(word 4,$(MAKECMDGOALS))",)
+
+# Usage: make auto-fetch-rates on [interval]
+# Examples:
+#   make auto-fetch-rates on 10    - Start worker with 10 second interval
+#   make auto-fetch-rates on       - Start worker with default interval (60 seconds)
+#   make auto-fetch-rates off      - Stop the running worker
+# This command controls the exchange rate worker which automatically fetches
+# rates for all currency pairs with observe=true flag
+auto-fetch-rates:
+	docker-compose exec app php bin/console app:worker exchange_rate $(word 2,$(MAKECMDGOALS)) $(if $(word 3,$(MAKECMDGOALS)),--interval=$(word 3,$(MAKECMDGOALS)),)
 
 %:
 	@:
