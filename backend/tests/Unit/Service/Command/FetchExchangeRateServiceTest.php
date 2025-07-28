@@ -54,8 +54,6 @@ class FetchExchangeRateServiceTest extends TestCase
                 return $exchangeRate;
             });
         
-        // Метод saveChanges не существует в репозитории, возможно, сохранение происходит внутри createExchangeRate
-        
         $result = $this->service->execute($currencyPair);
         
         $this->assertIsArray($result);
