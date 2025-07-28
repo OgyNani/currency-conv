@@ -54,6 +54,8 @@ class FetchExchangeRateServiceTest extends TestCase
                 return $exchangeRate;
             });
         
+        // Метод saveChanges не существует в репозитории, возможно, сохранение происходит внутри createExchangeRate
+        
         $result = $this->service->execute($currencyPair);
         
         $this->assertIsArray($result);
@@ -63,6 +65,9 @@ class FetchExchangeRateServiceTest extends TestCase
         
         $this->assertStringContainsString('USD → EUR', $result['title']);
         $this->assertStringContainsString('Successfully fetched', $result['message']);
+        $this->assertIsString($result['details']);
+        $this->assertStringContainsString('1 USD = 0.85 EUR', $result['details']);
+        $this->assertStringContainsString('as of', $result['details']);
     }
 
     public function testExecuteWithMissingCurrencyRate(): void
