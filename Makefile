@@ -25,11 +25,11 @@ redis-cli:
 # Testing commands
 # Test only command classes
 test-commands:
-	cd backend && ./vendor/bin/phpunit --testsuite=Unit --filter="Command"
+	cd backend && ./vendor/bin/phpunit --testsuite=Unit --filter="Service\\\\Command"
 
 # Test only command classes in Docker
 test-commands-docker:
-	docker-compose exec app php bin/phpunit --testsuite=Unit --filter="Command"
+	docker-compose exec app php bin/phpunit --testsuite=Unit --filter="Service\\\\Command"
 
 # Test API integration
 test-api:
